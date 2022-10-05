@@ -1,0 +1,1 @@
+Detektor nábežnej hrany signálu.
