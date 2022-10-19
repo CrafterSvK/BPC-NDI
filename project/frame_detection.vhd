@@ -4,13 +4,14 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use work.coprocessor.ALL;
 
 entity frame_detection is
     Port (
 		clk : in  STD_LOGIC;
-		cs_r : in STD_LOGIC;
-		cs_f : in STD_LOGIC;
-		sclk_r : in STD_LOGIC;
+		cs_b_r : in STD_LOGIC;
+		cs_b_f : in STD_LOGIC;
+		--sclk_r : in STD_LOGIC;
 		sclk_f : in STD_LOGIC;
 		fr_start : out STD_LOGIC;
 		fr_end : out STD_LOGIC;
@@ -19,8 +20,9 @@ entity frame_detection is
 end frame_detection;
 
 architecture Behavioral of frame_detection is
-	signal count_q : unsigned(2 downto 0);
-	signal count_d : unsigned(2 downto 0);
+	signal count_d, count_q : unsigned(4 downto 0);
+	signal cs_d : STD_LOGIC;
+	signal cs_q : STD_LOGIC;
 begin
 	-- frame count
 	counter : process (clk) begin
@@ -29,10 +31,24 @@ begin
 		end if;
 	end process;
 	
-	count_d <= count_q + '1' when sclk_f else count_q;
-	-- end frame count
+	count_d <= count_q + 1 when sclk_f = '1' else count_q;
 
-	fr_start <= cs_r;
-	fr_end <= cs_f;
-	fr_err <= '0' when count_q = 7 and cs_f else '1';
+	-- hold cs from falling to rising edge
+	frame_detect : process (clk) begin
+		if (rising_edge(clk)) then
+			cs_q <= cs_d;
+		end if;
+	end process;
+	
+	cs_d <= '1' when (cs_q = '0' and cs_b_f = '1') else 
+			'0' when (cs_q = '1' and cs_b_r = '1') else
+			'0';
+
+	-- output
+	fr_start <= cs_b_r;
+	fr_end <= cs_b_f;
+	
+	fr_err <= '1' when (count_q > c_FRAME_SIZE and cs_q = '1') else
+			  '1' when (count_q < c_FRAME_SIZE and cs_b_r = '1') else
+			  '0';
 end Behavioral;

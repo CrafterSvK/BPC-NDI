@@ -8,7 +8,7 @@ entity ddf is
     Port (
 		clk : in  STD_LOGIC;
 		input : in  STD_LOGIC;
-        output : out  STD_LOGIC
+		output : out  STD_LOGIC
 	);
 end ddf;
 
