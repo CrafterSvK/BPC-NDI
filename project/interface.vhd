@@ -8,6 +8,7 @@ use work.coprocessor.ALL;
 entity interface is
     Port ( 
 		clk : in STD_LOGIC;
+		rst : in STD_LOGIC;
 		CS_b : in  STD_LOGIC;
 		SCLK : in  STD_LOGIC;
 		MISO : out  STD_LOGIC;
@@ -22,8 +23,6 @@ entity interface is
 end interface;
 
 architecture Behavioral of interface is
-	signal rst : STD_LOGIC;
-
 	signal en_out, en_in : STD_LOGIC;
 	signal mosi_d, cs_b_d, sclk_d : STD_LOGIC;
 	signal cs_b_r, cs_b_f, sclk_r, sclk_f : STD_LOGIC;

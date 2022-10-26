@@ -21,5 +21,5 @@ begin
 		end if;
 	end process;
 
-	output <= (q xor input);
+	output <= '1' when (q = '1' and input = '0') else '0';
 end Behavioral;

@@ -45,8 +45,8 @@ begin
 			'0';
 
 	-- output
-	fr_start <= cs_b_r;
-	fr_end <= cs_b_f;
+	fr_start <= cs_b_f;
+	fr_end <= cs_b_r;
 	
 	fr_err <= '1' when (count_q > c_FRAME_SIZE and cs_q = '1') else
 			  '1' when (count_q < c_FRAME_SIZE and cs_b_r = '1') else
