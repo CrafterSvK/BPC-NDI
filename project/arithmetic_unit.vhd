@@ -43,4 +43,3 @@ begin
 	add <= t_FRAME(unsigned(frame1) + unsigned(frame2));
 	mul <= t_FRAME(unsigned(frame1) + unsigned(frame2));
 end Behavioral;
-

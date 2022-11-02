@@ -18,7 +18,7 @@ end serializer;
 architecture Behavioral of serializer is
 	signal d, q : t_FRAME;
 begin
-	process (clk, rst, en) begin
+	process (clk, rst) begin
 		if (rst = '1') then
 			q <= (others=>'0');
 		elsif (rising_edge(clk)) then

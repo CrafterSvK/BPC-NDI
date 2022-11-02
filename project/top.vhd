@@ -23,7 +23,7 @@ architecture Behavioral of top is
 	signal data_fr1, data_fr2, add_res, mul_res : t_FRAME;
 	signal we_data_fr1, we_data_fr2 : STD_LOGIC;
 begin
-	spi_interface: entity interface(Behavioral)
+	spi_interface: entity work.interface(Behavioral)
 		port map(
 			clk => clk,
 			rst => rst,
@@ -39,7 +39,7 @@ begin
 			wr_data => wr_data
 		);
 		
-	packet_controller_d : entity packet_controller(Behavioral)
+	packet_controller_d : entity work.packet_controller(Behavioral)
 		port map(
 			clk => clk,
 			rst => rst,

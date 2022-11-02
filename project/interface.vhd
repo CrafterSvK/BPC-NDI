@@ -28,27 +28,27 @@ architecture Behavioral of interface is
 	signal cs_b_r, cs_b_f, sclk_r, sclk_f : STD_LOGIC;
 begin
 	-- MOSI
-	mosi_ddf : entity ddf(Behavioral)
+	mosi_ddf : entity work.ddf(Behavioral)
 		port map(clk => clk, input => MOSI, output => mosi_d);
 
 	-- CS_b
-	cs_b_ddf : entity ddf(Behavioral)
+	cs_b_ddf : entity work.ddf(Behavioral)
 		port map(clk => clk, input => CS_b, output => cs_b_d);
-	cs_dre : entity dre(Behavioral)
+	cs_dre : entity work.dre(Behavioral)
 		port map(clk => clk, input => cs_b_d, output => cs_b_r);
-	cs_dfe : entity dfe(Behavioral)
+	cs_dfe : entity work.dfe(Behavioral)
 		port map(clk => clk, input => cs_b_d, output => cs_b_f);
 	
 	-- SCLK
-	sclk_ddf : entity ddf(Behavioral)
+	sclk_ddf : entity work.ddf(Behavioral)
 		port map(clk => clk, input => SCLK, output => sclk_d);
-	sclk_dre : entity dre(Behavioral)
+	sclk_dre : entity work.dre(Behavioral)
 		port map(clk => clk, input => sclk_d, output => sclk_r);
-	sclk_dfe : entity dfe(Behavioral)
+	sclk_dfe : entity work.dfe(Behavioral)
 		port map(clk => clk, input => sclk_d, output => sclk_f);
 	
 	
-	input_output_logic : entity inout_logic(Behavioral)
+	input_output_logic : entity work.inout_logic(Behavioral)
 		port map(
 			clk => clk,
 			cs_b_r => cs_b_r,
@@ -59,15 +59,16 @@ begin
 			en_in => en_in
 		);
 
-	deserializer_e : entity deserializer(Behavioral)
+	deserializer_e : entity work.deserializer(Behavioral)
 		port map(clk => clk, rst => rst, en => en_in, input => mosi_d, output => data_out);
 
-	serializer_e : entity serializer(Behavioral)
+	serializer_e : entity work.serializer(Behavioral)
 		port map(clk => clk, en => en_out, rst => rst, input => data_in, output => MISO);
 
-	frame_detection_e : entity frame_detection(Behavioral)
+	frame_detection_e : entity work.frame_detection(Behavioral)
 		port map(
 			clk => clk,
+			rst => rst,
 			cs_b_r => cs_b_r,
 			cs_b_f => cs_b_f,
 	--		sclk_r => sclk_r,
