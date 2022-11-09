@@ -91,8 +91,9 @@ BEGIN
  
    -- Stimulus process
    stim_proc : process
-	variable input : integer := 1;
-	variable bfm_rpl2 : integer;
+	variable input : integer := 101;
+	variable input2 : integer := 201;
+	variable reply : integer;
    begin
       -- initialize
 	  bfm_cmd.start <= '0';
@@ -101,7 +102,12 @@ BEGIN
 	  rst <= '0';
 	  wait for 10 ns;
 	  
-	  task_send_frame(input, bfm_rpl2, bfm_cmd, bfm_rpl);
+	  task_send_packet(input, input2, reply, bfm_cmd, bfm_rpl);
+	  
+	  wait for 1 us;
+	  
+	  task_send_short_frame(input2, reply, bfm_cmd, bfm_rpl);
+	  
       wait;
    end process;
 

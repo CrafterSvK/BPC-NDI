@@ -28,13 +28,15 @@ begin
 	-- frame count
 	counter : process (clk, rst) begin
 		if (rst = '1') then
-			count_q <= unsigned(0, 4);
+			count_q <= (others=>'0');
 		elsif rising_edge(clk) then
 			count_q <= count_d;
 		end if;
 	end process;
 	
-	count_d <= count_q + 1 when sclk_f = '1' else count_q;
+	count_d <= (others=>'0') when cs_b_f = '1' else
+				count_q + 1 when sclk_f = '1' else 
+				count_q;
 
 	-- hold cs from falling to rising edge
 	frame_detect : process (clk, rst) begin

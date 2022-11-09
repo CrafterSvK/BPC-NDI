@@ -14,7 +14,6 @@ entity packet_controller is
 		fr_end : in STD_LOGIC;
 		fr_err : in STD_LOGIC;
 		data_out : in t_FRAME;
-		wr_data : out STD_LOGIC;
 		data_in : out t_FRAME;
 		we_data_fr1 : out  STD_LOGIC;
 		we_data_fr2 : out  STD_LOGIC;
@@ -43,11 +42,6 @@ begin
 	end process;
 
 	process (current_state, fr_err, fr_start, fr_end) begin
-		wr_data <= '0';
-		if (fr_err = '1') then 
-			next_state <= expect_first_frame;
-		end if;
-		
 		case current_state is
 			when expect_first_frame =>
 				we_data_fr1 <= '0';
@@ -59,6 +53,10 @@ begin
 			when acquire_first_frame =>
 				we_data_fr1 <= '0';
 				we_data_fr2 <= '0';
+				
+				if (fr_err = '1') then 
+					next_state <= expect_first_frame;
+				end if;
 				
 				if (fr_end = '1') then 
 					we_data_fr1 <= '1';
@@ -79,6 +77,10 @@ begin
 			when acquire_second_frame =>
 				we_data_fr1 <= '0';
 				we_data_fr2 <= '0';
+			
+				if (fr_err = '1') then 
+					next_state <= expect_second_frame;
+				end if;
 			
 				if (fr_end = '1') then
 					we_data_fr2 <= '1';

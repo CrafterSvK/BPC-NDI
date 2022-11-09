@@ -3,6 +3,7 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use work.coprocessor.ALL;
 
 entity inout_logic is
     Port (
@@ -12,7 +13,8 @@ entity inout_logic is
 		sclk_f : in STD_LOGIC;
 		clk : in STD_LOGIC;
 		en_out : out  STD_LOGIC;
-        en_in : out  STD_LOGIC
+        en_in : out  STD_LOGIC;
+		en_au_data_in : out t_FRAME
 	);
 end inout_logic;
 
@@ -31,5 +33,4 @@ begin
 
 	en_in <= sclk_f and active_q; -- enable input serializer on falling edge of clock
 	en_out <= sclk_r and active_q; -- enable deserializer output on rising edge of clock
-
 end Behavioral;

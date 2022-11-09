@@ -28,14 +28,27 @@ begin
 		bfm_rpl.done <= '0';
 	
 		CS_b <= '0';
-	
-		for idx in 0 to c_FRAME_SIZE - 1 loop
-			SCLK <= '0';
-			MOSI <= bfm_cmd.data(idx);
-			wait for 1 us;
-			SCLK <= '1';
-			bfm_rpl.data(idx) <= MISO;
-			wait for 1 us;
-		end loop;
+		wait for 500 ns;
+		
+		case bfm_cmd.error is
+			when no_error =>
+				for idx in 0 to c_FRAME_SIZE - 1 loop
+					SCLK <= '0';
+					MOSI <= bfm_cmd.data(idx);
+					wait for 500 ns;
+					SCLK <= '1';
+					bfm_rpl.data(idx) <= MISO;
+					wait for 500 ns;
+				end loop;
+			when missing_bits_error =>
+				for idx in 0 to c_FRAME_SIZE - 5 loop
+					SCLK <= '0';
+					MOSI <= bfm_cmd.data(idx);
+					wait for 500 ns;
+					SCLK <= '1';
+					bfm_rpl.data(idx) <= MISO;
+					wait for 500 ns;
+				end loop;
+		end case;
 	end process;
 end Behavioral;
