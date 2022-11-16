@@ -17,7 +17,7 @@ end timer;
 architecture Behavioral of timer is
 	signal q, d : unsigned(5 downto 0);
 begin
-	process (clk, en) begin
+	process (clk) begin
 		if (rst = '1') then
 			q <= to_unsigned(0, 8);
 		elsif (rising_edge(clk)) then

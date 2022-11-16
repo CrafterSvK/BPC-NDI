@@ -19,9 +19,12 @@ entity arithmetic_unit is
 end arithmetic_unit;
 
 architecture Behavioral of arithmetic_unit is
-	signal frame1, frame2, add, mul : t_FRAME;
+	signal frame1, frame2 : t_FRAME;
+	signal a, b : signed(15 downto 0);
+	signal add : signed(15+1 downto 0);
+	signal mul : signed((2*16)-1 downto 0);
 begin
-	input_ff : process (clk, we_data_fr1, we_data_fr2) begin
+	input_ff : process (clk) begin
 		if (rising_edge(clk)) then
 			if (we_data_fr1 = '1') then
 				frame1 <= data_fr1;
@@ -40,6 +43,13 @@ begin
 		end if;
 	end process;
 	
-	add <= t_FRAME(unsigned(frame1) + unsigned(frame2));
-	mul <= t_FRAME(unsigned(frame1) + unsigned(frame2));
+	a <= signed(frame1);
+	b <= signed(frame2);
+	
+	add <= resize(a, 16) + b;
+	add_res <= (others=>'1') when add(15) = '1' else add(15 downto 0);
+	
+	mul <= resize(a, 32) * b;
+	mul_res <= mul(
+	
 end Behavioral;
