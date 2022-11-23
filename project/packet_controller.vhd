@@ -42,6 +42,7 @@ begin
 	end process;
 
 	process (current_state, fr_err, fr_start, fr_end) begin
+		data_res <= (others=>'0');
 		case current_state is
 			when expect_first_frame =>
 				we_data_fr1 <= '0';
@@ -53,6 +54,8 @@ begin
 			when acquire_first_frame =>
 				we_data_fr1 <= '0';
 				we_data_fr2 <= '0';
+				
+				data_in <= add_res;
 				
 				if (fr_err = '1') then 
 					next_state <= expect_first_frame;
@@ -77,6 +80,8 @@ begin
 			when acquire_second_frame =>
 				we_data_fr1 <= '0';
 				we_data_fr2 <= '0';
+			
+				data_in <= mul_res;
 			
 				if (fr_err = '1') then 
 					next_state <= expect_second_frame;

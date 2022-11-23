@@ -8,6 +8,10 @@ package coprocessor is
 
 	subtype t_FRAME is STD_LOGIC_VECTOR(c_FRAME_SIZE - 1 downto 0);
 
+	-- AU
+	constant c_MAX_POSITIVE_NUMBER : STD_LOGIC_VECTOR := x"7FFF";
+	constant c_MIN_NEGATIVE_NUMBER : STD_LOGIC_VECTOR := x"8000";
+
 	-- testbench
 	type t_bfm_error is (no_error, missing_bits_error);
 	
@@ -45,6 +49,8 @@ package coprocessor is
 		signal bfm_cmd : out t_BFM_CMD;
 		signal bfm_rpl : in t_BFM_RPL
 	);
+	
+	procedure reset_dut (signal rst : out STD_LOGIC);
 end coprocessor;
 
 package body coprocessor is
@@ -55,6 +61,7 @@ package body coprocessor is
 		signal bfm_cmd : out t_BFM_CMD;
 		signal bfm_rpl : in t_BFM_RPL
 	) is begin
+		bfm_cmd.error <= no_error;
 		bfm_cmd.data <= std_logic_vector(to_signed(frame_cmd, c_FRAME_SIZE));
 		bfm_cmd.start <= '1';
 		wait until bfm_rpl.done = '0';
@@ -90,5 +97,12 @@ package body coprocessor is
 		task_send_frame(frame1_val, rpl, bfm_cmd, bfm_rpl);
 		wait for 10 ns;
 		task_send_frame(frame2_val, rpl, bfm_cmd, bfm_rpl);
+	end procedure;
+	
+	procedure reset_dut (signal rst : out STD_LOGIC) is begin
+		rst <= '1';
+		wait for 10 ns;
+		rst <= '0';
+		wait for 10 ns;
 	end procedure;
 end coprocessor;

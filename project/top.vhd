@@ -56,5 +56,16 @@ begin
 			add_res => add_res,
 			mul_res => mul_res
 		);
+		
+	au_d : entity work.arithmetic_unit(Behavioral)
+		port map(
+			clk => clk,
+			data_fr1 => data_fr1,
+			we_data_fr1 => we_data_fr1,
+			data_fr2 => data_fr2,
+			we_data_fr2 => we_data_fr2,
+			add_res => add_res,
+			mul_res => mul_res
+		);
 
 end Behavioral;

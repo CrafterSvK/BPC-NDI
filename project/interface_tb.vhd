@@ -6,10 +6,10 @@ USE ieee.std_logic_1164.ALL;
 use work.coprocessor.ALL;
 --USE ieee.numeric_std.ALL;
  
-ENTITY interface_tb IS
-END interface_tb;
+ENTITY tb_spi IS
+END tb_spi;
  
-ARCHITECTURE behavior OF interface_tb IS 
+ARCHITECTURE behavior OF tb_spi IS 
     -- Component Declaration for the Unit Under Test (UUT)
  
     COMPONENT interface
@@ -91,24 +91,53 @@ BEGIN
  
    -- Stimulus process
    stim_proc : process
-	variable input : integer := 101;
-	variable input2 : integer := 201;
+	variable packet_val_a : integer := 101;
+	variable packet_val_b : integer := 201;
+	
+	variable frame_val_a : integer;
+	variable frame_val_b : integer;
+	
 	variable reply : integer;
    begin
-      -- initialize
-	  bfm_cmd.start <= '0';
-	  rst <= '1';
-	  wait for 10 ns;
-	  rst <= '0';
-	  wait for 10 ns;
+	  -- tc_spi_001
+	  reset_dut(rst);
 	  
-	  task_send_packet(input, input2, reply, bfm_cmd, bfm_rpl);
+	  frame_val_a := 100;
 	  
-	  wait for 1 us;
-	  
-	  task_send_short_frame(input2, reply, bfm_cmd, bfm_rpl);
-	  
-      wait;
+	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
+	  task_send_short_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
+	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
+      wait for 50 us;
+
+--	  -- tc_spi_002 (Znovu odoslanie packetu)
+--	  reset_dut(rst);
+--	  
+--	  frame_val_a := 100;
+--	  frame_val_b := 200;
+--	  
+--	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
+--	  wait for 1 ms;
+--	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+--	  --
+--	  
+--	  wait for 50 us;
+--
+--	  -- tc_spi_003
+--	  reset_dut(rst);
+--
+--	  frame_val_a := 100;
+--	  frame_val_b := 200;
+--	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+--	  -- 
+--	  frame_val_a := 111;
+--	  frame_val_b := 222;
+--	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+--	  --
+--	  
+--	  wait for 50 us;
+--	  
+--	  reset_dut(rst);
+	  wait;
    end process;
 
 END;

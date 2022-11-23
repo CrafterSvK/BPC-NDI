@@ -46,10 +46,13 @@ begin
 	a <= signed(frame1);
 	b <= signed(frame2);
 	
-	add <= resize(a, 16) + b;
-	add_res <= (others=>'1') when add(15) = '1' else add(15 downto 0);
+	add <= floor(resize(a, 16) + b);
+	add_res <= c_MAX_POSITIVE_NUMBER when a'left = '0' and b'left = '0' and add'left = '1' else 
+			   c_MIN_NEGATIVE_NUMBER when a'left = '1' and b'left = '1' and add'left = '0' else
+			   add(15 downto 0);
 	
-	mul <= resize(a, 32) * b;
-	mul_res <= mul(
+	mul <= floor(resize(a, 32) * b);
+	mul_res <= (others=>'1');
+	--mul_res <= c_MAX_POSITIVE_NUMBER when  else mul(23 downto 8);
 	
 end Behavioral;

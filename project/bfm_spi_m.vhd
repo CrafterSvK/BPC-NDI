@@ -26,10 +26,12 @@ begin
 
 		wait until bfm_cmd.start = '1';-- on bfm_cmd.start;-- until rising_edge(bfm_cmd.start);
 		bfm_rpl.done <= '0';
-	
+		
+		wait for 10 ns;
 		CS_b <= '0';
 		wait for 500 ns;
-		
+
+	
 		case bfm_cmd.error is
 			when no_error =>
 				for idx in 0 to c_FRAME_SIZE - 1 loop
@@ -41,7 +43,7 @@ begin
 					wait for 500 ns;
 				end loop;
 			when missing_bits_error =>
-				for idx in 0 to c_FRAME_SIZE - 5 loop
+				for idx in 0 to 6 loop
 					SCLK <= '0';
 					MOSI <= bfm_cmd.data(idx);
 					wait for 500 ns;
