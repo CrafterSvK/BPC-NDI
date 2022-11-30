@@ -19,8 +19,8 @@ entity packet_controller is
 		we_data_fr2 : out  STD_LOGIC;
 		data_fr1 : out  t_FRAME;
 		data_fr2 : out  t_FRAME;
-		add_res : in  STD_LOGIC;
-		mul_res : in  STD_LOGIC
+		add_res : in  t_FRAME;
+		mul_res : in  t_FRAME
 	);
 end packet_controller;
 
@@ -41,20 +41,18 @@ begin
 		end if;
 	end process;
 
-	process (current_state, fr_err, fr_start, fr_end) begin
-		data_res <= (others=>'0');
+	process (current_state, fr_err, fr_start, fr_end, add_res, mul_res, timer_hit) begin
+		data_in <= (others=>'0');
+		we_data_fr1 <= '0';
+		we_data_fr2 <= '0';
+		timer_en <= '0';
+		
 		case current_state is
 			when expect_first_frame =>
-				we_data_fr1 <= '0';
-				we_data_fr2 <= '0';
-			
 				if (fr_start = '1') then 
 					next_state <= acquire_first_frame;
 				end if;
-			when acquire_first_frame =>
-				we_data_fr1 <= '0';
-				we_data_fr2 <= '0';
-				
+			when acquire_first_frame =>		
 				data_in <= add_res;
 				
 				if (fr_err = '1') then 
@@ -66,8 +64,6 @@ begin
 					next_state <= expect_second_frame;
 				end if;
 			when expect_second_frame =>
-				we_data_fr1 <= '0';
-				we_data_fr2 <= '0';
 				timer_en <= '1';
 			
 				if (timer_hit <= '1') then
@@ -78,9 +74,6 @@ begin
 					next_state <= acquire_second_frame;
 				end if;
 			when acquire_second_frame =>
-				we_data_fr1 <= '0';
-				we_data_fr2 <= '0';
-			
 				data_in <= mul_res;
 			
 				if (fr_err = '1') then 
@@ -95,7 +88,7 @@ begin
 	end process;
 	
 	timer_wait_for_frame : entity timer(Behavioral)
-		port map(clk => clk, rst => rst, en => timer_en);
+		port map(clk => clk, rst => rst, en => timer_en, done => timer_hit);
 		
 	-- map frame to both inputs
 	data_fr1 <= data_out;

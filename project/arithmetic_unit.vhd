@@ -20,7 +20,7 @@ end arithmetic_unit;
 
 architecture Behavioral of arithmetic_unit is
 	signal frame1, frame2 : t_FRAME;
-	signal a, b : signed(15 downto 0);
+	signal a, b, add2, mul2 : signed(15 downto 0);
 	signal add : signed(15+1 downto 0);
 	signal mul : signed((2*16)-1 downto 0);
 begin
@@ -38,21 +38,21 @@ begin
 	
 	output_ff : process (clk) begin
 		if (rising_edge(clk)) then
-			add_res <= add;
-			mul_res <= mul;
+			add_res <= std_logic_vector(add2);
+			mul_res <= std_logic_vector(mul2);
 		end if;
 	end process;
 	
 	a <= signed(frame1);
 	b <= signed(frame2);
 	
-	add <= floor(resize(a, 16) + b);
-	add_res <= c_MAX_POSITIVE_NUMBER when a'left = '0' and b'left = '0' and add'left = '1' else 
-			   c_MIN_NEGATIVE_NUMBER when a'left = '1' and b'left = '1' and add'left = '0' else
-			   add(15 downto 0);
+	add <= resize(a, 17) + b;
+	add2 <= signed(c_MAX_POSITIVE_NUMBER) when (a(a'left) = '0' and b(b'left) = '0' and add(add'left) = '1') else 
+			signed(c_MIN_NEGATIVE_NUMBER) when (a(a'left) = '1' and b(b'left) = '1' and add(add'left) = '0') else
+			add(15 downto 0);
 	
-	mul <= floor(resize(a, 32) * b);
-	mul_res <= (others=>'1');
+	mul <= a * b;
+	mul2 <= mul(23 downto 8);
 	--mul_res <= c_MAX_POSITIVE_NUMBER when  else mul(23 downto 8);
 	
 end Behavioral;

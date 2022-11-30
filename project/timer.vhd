@@ -17,14 +17,14 @@ end timer;
 architecture Behavioral of timer is
 	signal q, d : unsigned(5 downto 0);
 begin
-	process (clk) begin
+	process (clk, rst) begin
 		if (rst = '1') then
-			q <= to_unsigned(0, 8);
+			q <= to_unsigned(0, 6);
 		elsif (rising_edge(clk)) then
 			q <= d;
 		end if;
 	end process;
 
-	d <= q + 1 when (en = '1') else to_unsigned(0, 8);
+	d <= q + 1 when (en = '1') else to_unsigned(0, 6);
 	done <= '1' when (q = 50) else '0';
 end Behavioral;

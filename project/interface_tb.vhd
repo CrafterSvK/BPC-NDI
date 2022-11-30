@@ -2,9 +2,9 @@
 -- SPI Interface test-bench
 --------------------------------------------------------------------------------
 LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
+use ieee.std_logic_1164.ALL;
 use work.coprocessor.ALL;
---USE ieee.numeric_std.ALL;
+use ieee.numeric_std.ALL;
  
 ENTITY tb_spi IS
 END tb_spi;
@@ -52,6 +52,8 @@ ARCHITECTURE behavior OF tb_spi IS
    signal bfm_cmd : t_BFM_CMD;
    signal bfm_rpl : t_BFM_RPL;
     
+	
+   signal test_number : unsigned(3 downto 0);
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
@@ -101,6 +103,7 @@ BEGIN
    begin
 	  -- tc_spi_001
 	  reset_dut(rst);
+	  test_number <= to_unsigned(1, 4);
 	  
 	  frame_val_a := 100;
 	  
@@ -109,31 +112,33 @@ BEGIN
 	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
       wait for 50 us;
 
---	  -- tc_spi_002 (Znovu odoslanie packetu)
---	  reset_dut(rst);
---	  
---	  frame_val_a := 100;
---	  frame_val_b := 200;
---	  
---	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
---	  wait for 1 ms;
---	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
---	  --
---	  
---	  wait for 50 us;
---
---	  -- tc_spi_003
---	  reset_dut(rst);
---
---	  frame_val_a := 100;
---	  frame_val_b := 200;
---	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
---	  -- 
---	  frame_val_a := 111;
---	  frame_val_b := 222;
---	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
---	  --
---	  
+	  -- tc_spi_002 (Znovu odoslanie packetu)
+	  reset_dut(rst);
+	  test_number <= to_unsigned(2, 4);
+	  
+	  frame_val_a := 100;
+	  frame_val_b := 200;
+	  
+	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
+	  wait for 1 ms;
+	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+	  task_send_packet(frame_val_b, frame_val_a, reply, bfm_cmd, bfm_rpl);
+	  
+	  wait for 50 us;
+
+	  -- tc_spi_003
+	  reset_dut(rst);
+	  test_number <= to_unsigned(3, 4);
+
+	  frame_val_a := 100;
+	  frame_val_b := 200;
+	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+	  -- 
+	  frame_val_a := 111;
+	  frame_val_b := 222;
+	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+	  --
+	  
 --	  wait for 50 us;
 --	  
 --	  reset_dut(rst);
