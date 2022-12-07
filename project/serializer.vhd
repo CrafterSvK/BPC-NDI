@@ -8,10 +8,10 @@ use work.coprocessor.ALL;
 entity serializer is
     Port (
 		clk : in STD_LOGIC;
-		en : in  STD_LOGIC;
-		rst : in  STD_LOGIC;
+		en : in STD_LOGIC;
+		rst : in STD_LOGIC;
 		input : in t_FRAME;
-		output : out  STD_LOGIC
+		output : out STD_LOGIC
 	);
 end serializer;
 

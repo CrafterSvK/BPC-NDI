@@ -21,7 +21,7 @@ architecture Behavioral of top is
 	signal data_out, data_in : t_FRAME;
 	
 	signal data_fr1, data_fr2, add_res, mul_res : t_FRAME;
-	signal we_data_fr1, we_data_fr2 : STD_LOGIC;
+	signal we_data_fr1, we_data_fr2, we_out_data : STD_LOGIC;
 begin
 	spi_interface: entity work.interface(Behavioral)
 		port map(
@@ -47,10 +47,10 @@ begin
 			fr_end => fr_end,
 			fr_err => fr_err,
 			data_out => data_out,
-			wr_data => wr_data,
 			data_in => data_in,
 			we_data_fr1 => we_data_fr1,
 			we_data_fr2 => we_data_fr2,
+			we_out_data => we_out_data,
 			data_fr1 => data_fr1,
 			data_fr2 => data_fr2,
 			add_res => add_res,
@@ -64,6 +64,7 @@ begin
 			we_data_fr1 => we_data_fr1,
 			data_fr2 => data_fr2,
 			we_data_fr2 => we_data_fr2,
+			we_out_data => we_out_data,
 			add_res => add_res,
 			mul_res => mul_res
 		);

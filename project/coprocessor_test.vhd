@@ -1,5 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.all;
+use work.coprocessor.all;
 
 package coprocessor_test is
 	type t_bfm_error is (no_error, missing_bits_error);

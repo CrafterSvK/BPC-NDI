@@ -13,6 +13,7 @@ entity arithmetic_unit is
 		we_data_fr1 : in STD_LOGIC;
 		data_fr2 : in t_FRAME;
 		we_data_fr2 : in STD_LOGIC;
+		we_out_data : in STD_LOGIC;
 		add_res : out t_FRAME;
 		mul_res : out t_FRAME
 	);
@@ -37,7 +38,7 @@ begin
 	end process;
 	
 	output_ff : process (clk) begin
-		if (rising_edge(clk)) then
+		if (rising_edge(clk) and we_out_data = '1') then
 			add_res <= std_logic_vector(add2);
 			mul_res <= std_logic_vector(mul2);
 		end if;
@@ -48,11 +49,12 @@ begin
 	
 	add <= resize(a, 17) + b;
 	add2 <= signed(c_MAX_POSITIVE_NUMBER) when (a(a'left) = '0' and b(b'left) = '0' and add(add'left) = '1') else 
-			signed(c_MIN_NEGATIVE_NUMBER) when (a(a'left) = '1' and b(b'left) = '1' and add(add'left) = '0') else
-			add(15 downto 0);
+			  signed(c_MIN_NEGATIVE_NUMBER) when (a(a'left) = '1' and b(b'left) = '1' and add(add'left) = '0') else
+			  add(15 downto 0);
 	
 	mul <= a * b;
-	mul2 <= mul(23 downto 8);
-	--mul_res <= c_MAX_POSITIVE_NUMBER when  else mul(23 downto 8);
+	mul2 <= signed(c_MAX_POSITIVE_NUMBER) when ((a(a'left) xnor b(b'left)) = '1' and mul(31 downto 24) /= "00000000") else
+			  signed(c_MIN_NEGATIVE_NUMBER) when ((a(a'left) xor b(b'left)) = '1' and mul(31 downto 24) /= "00000000") else
+			  mul(23 downto 8);
 	
 end Behavioral;

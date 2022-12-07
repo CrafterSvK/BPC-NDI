@@ -53,6 +53,7 @@ begin
 			clk => clk,
 			cs_b_r => cs_b_r,
 			cs_b_f => cs_b_f,
+			CS_b => CS_b,
 			sclk_r => sclk_r,
 			sclk_f => sclk_f,
 			en_out => en_out,

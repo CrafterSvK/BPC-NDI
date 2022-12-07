@@ -15,12 +15,13 @@ entity packet_controller is
 		fr_err : in STD_LOGIC;
 		data_out : in t_FRAME;
 		data_in : out t_FRAME;
-		we_data_fr1 : out  STD_LOGIC;
-		we_data_fr2 : out  STD_LOGIC;
-		data_fr1 : out  t_FRAME;
-		data_fr2 : out  t_FRAME;
-		add_res : in  t_FRAME;
-		mul_res : in  t_FRAME
+		we_data_fr1 : out STD_LOGIC;
+		we_data_fr2 : out STD_LOGIC;
+		we_out_data : out STD_LOGIC;
+		data_fr1 : out t_FRAME;
+		data_fr2 : out t_FRAME;
+		add_res : in t_FRAME;
+		mul_res : in t_FRAME
 	);
 end packet_controller;
 
@@ -45,10 +46,13 @@ begin
 		data_in <= (others=>'0');
 		we_data_fr1 <= '0';
 		we_data_fr2 <= '0';
+		we_out_data <= '0';
 		timer_en <= '0';
 		
 		case current_state is
 			when expect_first_frame =>
+				we_out_data <= '1';
+
 				if (fr_start = '1') then 
 					next_state <= acquire_first_frame;
 				end if;

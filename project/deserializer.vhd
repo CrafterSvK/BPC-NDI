@@ -8,11 +8,11 @@ use work.coprocessor.ALL;
 
 entity deserializer is
     Port (
-		clk : in  STD_LOGIC;
+		clk : in STD_LOGIC;
 		rst : in STD_LOGIC;
-        en : in  STD_LOGIC;
-        input : in  STD_LOGIC;
-        output : out  t_FRAME
+      en : in STD_LOGIC;
+      input : in STD_LOGIC;
+      output : out t_FRAME
 	);
 end deserializer;
 

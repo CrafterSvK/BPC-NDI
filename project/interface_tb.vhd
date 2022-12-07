@@ -4,6 +4,7 @@
 LIBRARY ieee;
 use ieee.std_logic_1164.ALL;
 use work.coprocessor.ALL;
+use work.coprocessor_test.ALL;
 use ieee.numeric_std.ALL;
  
 ENTITY tb_spi IS

@@ -9,11 +9,12 @@ entity inout_logic is
     Port (
 		cs_b_r : in STD_LOGIC;
 		cs_b_f : in STD_LOGIC;
+		CS_b : in STD_LOGIC;
 		sclk_r : in STD_LOGIC;
 		sclk_f : in STD_LOGIC;
 		clk : in STD_LOGIC;
 		en_out : out  STD_LOGIC;
-        en_in : out  STD_LOGIC;
+      en_in : out  STD_LOGIC;
 		en_au_data_in : out t_FRAME
 	);
 end inout_logic;
@@ -28,9 +29,9 @@ begin
 	end process;
 	
 	active_d <= '0' when cs_b_r = '1' and active_q = '1' else
-				'1' when cs_b_f = '1' and active_q = '0' else
-				'0';
+				   '1' when cs_b_f = '1' and active_q = '0' else
+				   '0';
 
-	en_in <= sclk_f and active_q; -- enable input serializer on falling edge of clock
-	en_out <= sclk_r and active_q; -- enable deserializer output on rising edge of clock
+	en_in <= sclk_f and CS_b; -- enable input serializer on falling edge of clock
+	en_out <= sclk_r and CS_b; -- enable deserializer output on rising edge of clock
 end Behavioral;

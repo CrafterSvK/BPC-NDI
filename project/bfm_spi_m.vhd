@@ -4,6 +4,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use work.coprocessor.ALL;
+use work.coprocessor_test.ALL;
 
 entity bfm_spi_m is
 	Port (
