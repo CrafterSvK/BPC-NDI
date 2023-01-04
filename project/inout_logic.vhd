@@ -13,25 +13,14 @@ entity inout_logic is
 		sclk_r : in STD_LOGIC;
 		sclk_f : in STD_LOGIC;
 		clk : in STD_LOGIC;
-		en_out : out  STD_LOGIC;
-      en_in : out  STD_LOGIC;
-		en_au_data_in : out t_FRAME
+		en_out_shift : out  STD_LOGIC;
+        en_in : out  STD_LOGIC
 	);
 end inout_logic;
 
 architecture Behavioral of inout_logic is
-	signal active_q, active_d : STD_LOGIC;
-begin
-	process (clk) begin
-		if rising_edge(clk) then
-			active_q <= active_d;
-		end if;
-	end process;
-	
-	active_d <= '0' when cs_b_r = '1' and active_q = '1' else
-				   '1' when cs_b_f = '1' and active_q = '0' else
-				   '0';
 
-	en_in <= sclk_f and CS_b; -- enable input serializer on falling edge of clock
-	en_out <= sclk_r and CS_b; -- enable deserializer output on rising edge of clock
+begin
+	en_in <= sclk_f and (not CS_b); -- enable input serializer on falling edge of clock
+	en_out_shift <= sclk_r and (not CS_b); -- enable deserializer output on rising edge of clock
 end Behavioral;

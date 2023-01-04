@@ -31,7 +31,6 @@ begin
 		wait for 10 ns;
 		CS_b <= '0';
 		wait for 500 ns;
-
 	
 		case bfm_cmd.error is
 			when no_error =>

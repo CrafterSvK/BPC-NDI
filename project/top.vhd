@@ -51,6 +51,7 @@ begin
 			we_data_fr1 => we_data_fr1,
 			we_data_fr2 => we_data_fr2,
 			we_out_data => we_out_data,
+			wr_data => wr_data,
 			data_fr1 => data_fr1,
 			data_fr2 => data_fr2,
 			add_res => add_res,
@@ -60,6 +61,7 @@ begin
 	au_d : entity work.arithmetic_unit(Behavioral)
 		port map(
 			clk => clk,
+			rst => rst,
 			data_fr1 => data_fr1,
 			we_data_fr1 => we_data_fr1,
 			data_fr2 => data_fr2,

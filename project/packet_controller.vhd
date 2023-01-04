@@ -18,6 +18,7 @@ entity packet_controller is
 		we_data_fr1 : out STD_LOGIC;
 		we_data_fr2 : out STD_LOGIC;
 		we_out_data : out STD_LOGIC;
+		wr_data : out STD_LOGIC;
 		data_fr1 : out t_FRAME;
 		data_fr2 : out t_FRAME;
 		add_res : in t_FRAME;
@@ -27,12 +28,16 @@ end packet_controller;
 
 architecture Behavioral of packet_controller is
 	-- state machine
-	type state is (expect_first_frame, acquire_first_frame, expect_second_frame, acquire_second_frame);
+	type state is (expect_first_frame, acquire_first_frame, expect_second_frame, acquire_second_frame, save_res);
 	signal current_state, next_state : state;
 	
 	-- timer
 	signal timer_en, timer_hit : STD_LOGIC;
 begin
+	-- 1 ms timer
+	timer_wait_for_frame : entity work.timer(Behavioral)
+		port map(clk => clk, rst => rst, en => timer_en, done => timer_hit);
+
 	-- state machine
 	process (clk, rst) begin
 		if (rst = '1') then
@@ -43,22 +48,22 @@ begin
 	end process;
 
 	process (current_state, fr_err, fr_start, fr_end, add_res, mul_res, timer_hit) begin
+		next_state <= current_state;
 		data_in <= (others=>'0');
 		we_data_fr1 <= '0';
 		we_data_fr2 <= '0';
 		we_out_data <= '0';
+		wr_data <= '0';
 		timer_en <= '0';
 		
 		case current_state is
 			when expect_first_frame =>
-				we_out_data <= '1';
-
-				if (fr_start = '1') then 
+				if (fr_start = '1') then
+					data_in <= add_res;
+					wr_data <= '1';
 					next_state <= acquire_first_frame;
 				end if;
 			when acquire_first_frame =>		
-				data_in <= add_res;
-				
 				if (fr_err = '1') then 
 					next_state <= expect_first_frame;
 				end if;
@@ -70,30 +75,30 @@ begin
 			when expect_second_frame =>
 				timer_en <= '1';
 			
-				if (timer_hit <= '1') then
+				if (timer_hit = '1') then
 					next_state <= expect_first_frame;
 				end if;
 			
 				if (fr_start = '1') then 
+					data_in <= mul_res;
+					wr_data <= '1';
 					next_state <= acquire_second_frame;
 				end if;
 			when acquire_second_frame =>
-				data_in <= mul_res;
-			
 				if (fr_err = '1') then 
 					next_state <= expect_second_frame;
 				end if;
 			
 				if (fr_end = '1') then
 					we_data_fr2 <= '1';
-					next_state <= expect_first_frame;
+					next_state <= save_res;
 				end if;
+			when save_res =>
+				we_out_data <= '1';
+				next_state <= expect_first_frame;
 		end case;
 	end process;
-	
-	timer_wait_for_frame : entity timer(Behavioral)
-		port map(clk => clk, rst => rst, en => timer_en, done => timer_hit);
-		
+
 	-- map frame to both inputs
 	data_fr1 <= data_out;
 	data_fr2 <= data_out;
