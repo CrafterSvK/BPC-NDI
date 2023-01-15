@@ -7,12 +7,9 @@ use work.coprocessor.ALL;
 
 entity inout_logic is
     Port (
-		cs_b_r : in STD_LOGIC;
-		cs_b_f : in STD_LOGIC;
 		CS_b : in STD_LOGIC;
 		sclk_r : in STD_LOGIC;
 		sclk_f : in STD_LOGIC;
-		clk : in STD_LOGIC;
 		en_out_shift : out  STD_LOGIC;
         en_in : out  STD_LOGIC
 	);

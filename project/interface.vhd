@@ -34,25 +34,18 @@ begin
 	-- CS_b
 	cs_b_ddf : entity work.ddf(Behavioral)
 		port map(clk => clk, input => CS_b, output => cs_b_d);
-	cs_dre : entity work.dre(Behavioral)
-		port map(clk => clk, input => cs_b_d, output => cs_b_r);
-	cs_dfe : entity work.dfe(Behavioral)
-		port map(clk => clk, input => cs_b_d, output => cs_b_f);
+	cs_drfe : entity work.drfe(Behavioral)
+		port map(clk => clk, input => cs_b_d, re => cs_b_r, fe => cs_b_f);
 	
 	-- SCLK
 	sclk_ddf : entity work.ddf(Behavioral)
 		port map(clk => clk, input => SCLK, output => sclk_d);
-	sclk_dre : entity work.dre(Behavioral)
-		port map(clk => clk, input => sclk_d, output => sclk_r);
-	sclk_dfe : entity work.dfe(Behavioral)
-		port map(clk => clk, input => sclk_d, output => sclk_f);
+	sclk_drfe : entity work.drfe(Behavioral)
+		port map(clk => clk, input => sclk_d, re => sclk_r, fe => sclk_f);
 	
 	
 	input_output_logic : entity work.inout_logic(Behavioral)
 		port map(
-			clk => clk,
-			cs_b_r => cs_b_r,
-			cs_b_f => cs_b_f,
 			CS_b => cs_b_d,
 			sclk_r => sclk_r,
 			sclk_f => sclk_f,

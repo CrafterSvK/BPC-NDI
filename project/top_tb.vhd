@@ -83,65 +83,61 @@ BEGIN
 	variable packet_val_a : integer := 101;
 	variable packet_val_b : integer := 201;
 	
-	variable frame_val_a : integer;
-	variable frame_val_b : integer;
+	variable frame_val_a : integer := 100;
+	variable frame_val_b : integer := 200;
 	
 	variable reply : integer;
    begin
-	  reset_dut(rst);
-	  wait for 100 us;
-	  test_number <= to_unsigned(3, 4);
-
-	  frame_val_a := 32767;
-	  frame_val_b := 2;
-	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
-	  wait for 10 us;
-	  -- 
-	  frame_val_a := 4;
-	  frame_val_b := 5;
-	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
-	  
---	  -- tc_spi_001
+   
 --	  reset_dut(rst);
---	  test_number <= to_unsigned(1, 4);
---	  
---	  frame_val_a := 100;
---	  
---	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
---	  task_send_short_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
---	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
---      wait for 50 us;
---
---	  -- tc_spi_002 (Znovu odoslanie packetu)
---	  reset_dut(rst);
---	  test_number <= to_unsigned(2, 4);
---	  
---	  frame_val_a := 100;
---	  frame_val_b := 200;
---	  
---	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
---	  wait for 1 ms;
---	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
---	  task_send_packet(frame_val_b, frame_val_a, reply, bfm_cmd, bfm_rpl);
---	  
---	  wait for 50 us;
---
---	  -- tc_spi_003
---	  reset_dut(rst);
+--	  wait for 100 us;
 --	  test_number <= to_unsigned(3, 4);
 --
---	  frame_val_a := 100;
---	  frame_val_b := 200;
+--	  frame_val_a := 6592; -- 25.75
+--	  frame_val_b := -256; -- -1
 --	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+--	  wait for 10 us;
 --	  -- 
---	  frame_val_a := 111;
---	  frame_val_b := 222;
+--	  frame_val_a := 0; -- 0
+--	  frame_val_b := 256; -- 1
 --	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
---	  --
 --	  
---	  wait for 50 us;
---	  
+
+
 --	  reset_dut(rst);
+--	  wait for 100 us;
+--	  frame_val_a := 6337;
+--	  
+--	  task_send_short_frame(frame_val_a, reply, bfm_cmd, bfm_rpl); -- bad
+--	  wait for 10 ns;
+--	  
+--	  frame_val_a := 6337;
+--	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl); -- good
+--	  wait for 10 ns;
+--	  
+--	  frame_val_b := 0;
+--	  task_send_short_frame(frame_val_b, reply, bfm_cmd, bfm_rpl); -- bad
+--	  wait for 10 ns;
+--	  
+--	  frame_val_a := 1088;
+--	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl); -- good
+--	  
+--	  frame_val_a := 0; -- 0
+--	  frame_val_b := 256; -- 1
+--	  wait for 10 ns;
+--	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+	  reset_dut(rst);
+	  wait for 100 us;
+	  frame_val_a := 25600;
+	  task_send_frame(frame_val_a, reply, bfm_cmd, bfm_rpl);
+	  wait for 2 ms;
+	  
+	  frame_val_a := 30720; -- 100
+	  frame_val_b := 512; -- 2
+	  task_send_packet(frame_val_a, frame_val_b, reply, bfm_cmd, bfm_rpl);
+	  frame_val_a := 0; -- 0
+	  task_send_packet(frame_val_a, frame_val_a, reply, bfm_cmd, bfm_rpl);
+	
 	  wait;
    end process;
 

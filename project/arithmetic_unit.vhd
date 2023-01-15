@@ -24,7 +24,7 @@ architecture Behavioral of arithmetic_unit is
 	signal frame1, frame2 : t_FRAME;
 	signal a, b, add_d, mul_d : signed(15 downto 0);
 	signal add : signed(15+1 downto 0);
-	signal mul : signed((2*16)-1 downto 0);
+	signal mul : signed(23 downto 0);
 begin
 	input_ff : process (clk, rst) begin
 		if (rst = '1') then
@@ -58,13 +58,13 @@ begin
 	add_d <= signed(c_MAX_POSITIVE_NUMBER) when (a(a'left) = '0' and b(b'left) = '0' and add(add'left) = '1') else 
 			 signed(c_MIN_NEGATIVE_NUMBER) when (a(a'left) = '1' and b(b'left) = '1' and add(add'left) = '0') else
 			 add(15 downto 0);
-	
-	mul <= a * b;
+
+	mul <= "*"(a, b)(31 downto 8);
 	mul_d <= signed(c_MAX_POSITIVE_NUMBER) when ( -- saturate to maximum positive number if sgn(a) == sgn(b)
-				(a(a'left) xnor b(b'left)) = '1' and mul(31 downto 16) /= "00000000000000000"
+				(a(a'left) xnor b(b'left)) = '1' and mul(23 downto 15) /= "00000000"
 			 ) else 
 			 signed(c_MIN_NEGATIVE_NUMBER) when ( -- saturate to minimum negative number if sgn(a) != sgn(b)
-				(a(a'left) xor b(b'left)) = '1' and mul(mul'left) = '0'
+				(a(a'left) xor b(b'left)) = '1' and mul(23 downto 15) /= "11111111"
 			 ) else
 			 mul(mul'left)&mul(14 downto 0); -- contract to 16 bits with sgn
 end Behavioral;

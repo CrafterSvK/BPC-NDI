@@ -25,7 +25,8 @@ begin
 		SCLK <= '1';
 		bfm_rpl.done <= '1';
 
-		wait until bfm_cmd.start = '1';-- on bfm_cmd.start;-- until rising_edge(bfm_cmd.start);
+		wait until bfm_cmd.start = '1';
+		bfm_rpl.data <= (others=>'0');
 		bfm_rpl.done <= '0';
 		
 		wait for 10 ns;

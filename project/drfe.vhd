@@ -1,18 +1,19 @@
 ----------------------------------------------------------------------------------
--- detector of falling edge
+-- detector of rising & falling edge
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity dfe is
+entity drfe is
     Port ( 
-		clk : in  STD_LOGIC;
-        input : in  STD_LOGIC;
-        output : out  STD_LOGIC
+		clk : in STD_LOGIC;
+        input : in STD_LOGIC;
+        fe : out STD_LOGIC;
+		re : out STD_LOGIC
 	);
-end dfe;
+end drfe;
 
-architecture Behavioral of dfe is
+architecture Behavioral of drfe is
 	signal q: STD_LOGIC;
 begin
 	d_reg : process (clk) begin
@@ -21,5 +22,6 @@ begin
 		end if;
 	end process;
 
-	output <= '1' when (q = '1' and input = '0') else '0';
+	re <= (q xor input) and input;
+	fe <= '1' when (q = '1' and input = '0') else '0';
 end Behavioral;
